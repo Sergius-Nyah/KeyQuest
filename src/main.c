@@ -70,7 +70,7 @@ int read_words(char words[MAX_WORDS][MAX_WORD_LENGTH], const char* file_name) {
     return i;
 }
 
-// Main function
+/// Main function
 int main() {
     srand(time(0));  // Seed the random number generator
 
@@ -116,10 +116,10 @@ int main() {
         scanf("%d", &time_limit); 
 
         double total_speed = 0.0;
-        int start_time = clock();
-        for (int round = 0; round < MAX_ROUNDS; round++) {
+        int game_start_time = clock();
+        for (int round = 0; round < rounds; round++) {
             int current_time = clock();
-            if((current_time - start_time) / CLOCKS_PER_SEC > time_limit){
+            if((current_time - game_start_time) / CLOCKS_PER_SEC > time_limit){
                 printf("Time limit exceeded. Game over!!. \n");
                 break;
             }
@@ -131,26 +131,26 @@ int main() {
             printf("Type this word as fast as you can and press enter.\n");
 
             char input[MAX_WORD_LENGTH];
-            int start_time = clock();  // Record the start time
+            int round_start_time = clock();  // Record the start time
             scanf("%s", input);  // Get the user's input
-            int end_time = clock();  // Record the end time
+            int round_end_time = clock();  // Record the end time
 
             if (strcmp(input, random_word) != 0) {
                 printf("Incorrect input. Skipping this round.\n");
                 continue;
             }
 
-            double speed = calculateSpeed(start_time, end_time, strlen(random_word));
+            double speed = calculateSpeed(round_start_time, round_end_time, strlen(random_word));
             printf("Your typing speed was %.2f characters per minute.\n", speed);
             total_speed += speed;
         }
 
-        double average_speed = total_speed / MAX_ROUNDS;
+        double average_speed = total_speed / rounds;
         printf("Your average typing speed was %.2f characters per minute.\n", average_speed);
 
         update_high_score(db, name, average_speed);
     }
-close_database(db);
+    close_database(db);
 
     return 0;
 }
