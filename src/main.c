@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "game_logic.h"
+#include "logic.h"
 #include "sqlite3.h"
 
 #define MAX_WORD_LENGTH 20
