@@ -3,10 +3,55 @@
 #include <string.h>
 #include <time.h>
 #include "game_logic.h"
+#include "sqlite3.h"
 
 #define MAX_WORD_LENGTH 20
 #define MAX_WORDS 1000
 #define MAX_ROUNDS 5
+
+// Function to open database
+sqlite3* open_database(const char* filename) {
+    sqlite3* db;
+    int rc = sqlite3_open(filename, &db);
+
+    if (rc != SQLITE_OK) {
+        printf("Cannot open database: %s\n", sqlite3_errmsg(db));
+        return NULL;
+    }
+
+    char* sql = "CREATE TABLE IF NOT EXISTS HighScores(Name TEXT PRIMARY KEY, Score REAL);";
+    char* err_msg = 0;
+
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+
+    if (rc != SQLITE_OK ) {
+        printf("Failed to create table: %s\n", err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        return NULL;
+    }
+
+    return db;
+}
+
+// Function to update the high score
+void update_high_score(sqlite3* db, const char* name, double score) {
+    char sql[200];
+    sprintf(sql, "INSERT OR REPLACE INTO HighScores(Name, Score) VALUES('%s', %f);", name, score);
+
+    char* err_msg = 0;
+    int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+
+    if (rc != SQLITE_OK ) {
+        printf("Failed to update high score: %s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+}
+
+// Function to close the database
+void close_database(sqlite3* db) {
+    sqlite3_close(db);
+}
 
 // Function to read words from a file
 int read_words(char words[MAX_WORDS][MAX_WORD_LENGTH], const char* file_name) {
