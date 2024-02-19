@@ -86,18 +86,30 @@ int main() {
 
     sqlite3* db = open_database("high_scores.db");
     if (!db) {
-        return 1;
+        return 1; // Err 
     }
-    else{
-        sqlite3* db2 = open_database("high_scores.db");
-        printf("Database opened successfully\n");
-    }
+   
     for (int player = 0; player < num_players; player++) {
         printf("Player %d's turn\n", player + 1);
 
         char name[100];
         printf("Enter your name: ");
         scanf("%s", name);
+
+        int difficulty;
+        printf("Enter your dificulty level (1-easy, 2- Medium, 3-Hard):\n");
+        scanf("%d", &difficulty);
+
+        int rounds = MAX_ROUNDS;
+        if(difficulty == 1){
+            rounds = 2;
+        }
+        else if (difficulty == 2){
+            rounds = 4;
+        }
+        else if (difficulty == 3){
+            rounds = 6;
+        }
 
         double total_speed = 0.0;
         for (int round = 0; round < MAX_ROUNDS; round++) {
