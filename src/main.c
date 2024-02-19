@@ -111,8 +111,19 @@ int main() {
             rounds = 6;
         }
 
+        int time_limit;
+        printf("Enter time limit in seconds: ");
+        scanf("%d", &time_limit); 
+
         double total_speed = 0.0;
+        int start_time = clock();
         for (int round = 0; round < MAX_ROUNDS; round++) {
+            int current_time = clock();
+            if((current_time - start_time) / CLOCKS_PER_SEC > time_limit){
+                printf("Time limit exceeded. Game over!!. \n");
+                break;
+            }
+            
             int random_index = rand() % num_words;  // Generate a random index
             char* random_word = words[random_index];  // Select a random word
 
