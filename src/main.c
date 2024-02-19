@@ -80,43 +80,54 @@ int main() {
         return 1;
     }
 
-    double total_speed = 0.0;
-    for (int round = 0; round < MAX_ROUNDS; round++) {
-        int random_index = rand() % num_words;  // Generate a random index
-        char* random_word = words[random_index];  // Select a random word
+    int num_players;
+    printf("Enter the number of players: ");
+    scanf("%d", &num_players);
 
-        printf("Round %d: Your word is: %s\n", round + 1, random_word);
-        printf("Type this word as fast as you can and press enter.\n");
+    sqlite3* db = open_database("high_scores.db");
+    if (!db) {
+        return 1;
+    }
+    else{
+        sqlite3* db2 = open_database("high_scores.db");
+        printf("Database opened successfully\n");
+    }
+    for (int player = 0; player < num_players; player++) {
+        printf("Player %d's turn\n", player + 1);
 
-        char input[MAX_WORD_LENGTH];
-        int start_time = clock();  // Record the start time
-        scanf("%s", input);  // Get the user's input
-        int end_time = clock();  // Record the end time
+        char name[100];
+        printf("Enter your name: ");
+        scanf("%s", name);
 
-        if (strcmp(input, random_word) != 0) {
-            printf("Incorrect input. Skipping this round.\n");
-            continue;
+        double total_speed = 0.0;
+        for (int round = 0; round < MAX_ROUNDS; round++) {
+            int random_index = rand() % num_words;  // Generate a random index
+            char* random_word = words[random_index];  // Select a random word
+
+            printf("Round %d: Your word is: %s\n", round + 1, random_word);
+            printf("Type this word as fast as you can and press enter.\n");
+
+            char input[MAX_WORD_LENGTH];
+            int start_time = clock();  // Record the start time
+            scanf("%s", input);  // Get the user's input
+            int end_time = clock();  // Record the end time
+
+            if (strcmp(input, random_word) != 0) {
+                printf("Incorrect input. Skipping this round.\n");
+                continue;
+            }
+
+            double speed = calculateSpeed(start_time, end_time, strlen(random_word));
+            printf("Your typing speed was %.2f characters per minute.\n", speed);
+            total_speed += speed;
         }
 
-        double speed = calculateSpeed(start_time, end_time, strlen(random_word));
-        printf("Your typing speed was %.2f characters per minute.\n", speed);
-        total_speed += speed;
-    }
+        double average_speed = total_speed / MAX_ROUNDS;
+        printf("Your average typing speed was %.2f characters per minute.\n", average_speed);
 
-    double average_speed = total_speed / MAX_ROUNDS;
-    printf("Your average typing speed was %.2f characters per minute.\n", average_speed);
-
-    // Save the high score to a file
-    FILE* file = fopen("high_score.txt", "r");
-    double high_score;
-    if (!file || fscanf(file, "%lf", &high_score) != 1 || average_speed > high_score) {
-        file = fopen("high_score.txt", "w");
-        if (file) {
-            fprintf(file, "%.2f", average_speed);
-            fclose(file);
-            printf("New high score!\n");
-        }
+        update_high_score(db, name, average_speed);
     }
+close_database(db);
 
     return 0;
 }
