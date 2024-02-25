@@ -3,8 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "logic.h"
-#include "sqlite3.h"
-
+#include "sqlite3.h" 
 #define MAX_WORD_LENGTH 20
 #define MAX_WORDS 1000
 #define MAX_ROUNDS 5
