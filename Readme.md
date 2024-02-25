@@ -21,6 +21,6 @@ To build the game, use a C compiler such as gcc:
 
 To run the game:
 
-Contributing
+## Contributing
 Contributions are welcome! Please feel free to submit a pull request.
 
