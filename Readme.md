@@ -17,6 +17,7 @@ The game maintains a database of high scores. If your average typing speed is hi
 This project uses the SQLite3 library to manage the high scores database. You will need to have this library installed to build and run the game.
 
 To build the game, use a C compiler such as gcc:
+`gcc -o game main.c logic.c -lsqlite3`
 
 To run the game:
 
