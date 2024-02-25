@@ -20,7 +20,7 @@ To build the game, use a C compiler such as gcc:
 `gcc -o game main.c logic.c -lsqlite3`
 
 To run the game:
-
+./game
 ## Contributing
 Contributions are welcome! Please feel free to submit a pull request.
 
